@@ -1,6 +1,6 @@
 # sqladuit
 
-这是sqlaudit的主要组件，主要用来监听本机或[sqlpacket组件](http://gitlab.jixindatech.com/sql/sqlpacket) 发送过来的以太网帧，然后重新还原成原来的sql流量，依据规则进行匹配。同时提供了web接口进行规则管理告警配置等,prometheus提供了客户端数量和packet的监控。
+这是sqlaudit的主要组件，主要用来监听本机或[sqlpacket组件](http://gitlab.jixindatech.com/sql/sqlpacket) 发送过来的以太网帧，然后重新还原成原来的sql流量，依据规则进行匹配。同时提供了web接口进行规则管理告警配置等,prometheus提供了客户端数量和packet的监控。欢迎issue和star!
 
 ## Compile
 
@@ -28,7 +28,6 @@ docker run -d \
 ## Basic structure
 ![Image text](https://raw.githubusercontent.com/jixindatech/sqlaudit/master/doc/images/sqlaudit.jpg)
 ## Contributing
-
 PRs accepted.
 
 ## License

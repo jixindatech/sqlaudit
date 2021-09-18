@@ -7,8 +7,8 @@ import (
 	"errors"
 	"github.com/aquasecurity/esquery"
 	"github.com/elastic/go-elasticsearch/v7"
-	"github.com/jixindatech/pkg/config"
-	"github.com/jixindatech/pkg/core/golog"
+	"github.com/jixindatech/sqlaudit/pkg/config"
+	"github.com/jixindatech/sqlaudit/pkg/core/golog"
 	"go.uber.org/zap"
 )
 

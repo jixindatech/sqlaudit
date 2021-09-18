@@ -2,7 +2,7 @@ package alert
 
 import (
 	"errors"
-	"github.com/jixindatech/pkg/config"
+	"github.com/jixindatech/sqlaudit/pkg/config"
 )
 
 type Alert interface {

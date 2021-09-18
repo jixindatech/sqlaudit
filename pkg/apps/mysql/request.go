@@ -3,8 +3,8 @@ package mysql
 import (
 	"errors"
 	"fmt"
-	"github.com/jixindatech/pkg/config"
-	"github.com/jixindatech/pkg/core/golog"
+	"github.com/jixindatech/sqlaudit/pkg/config"
+	"github.com/jixindatech/sqlaudit/pkg/core/golog"
 	"go.uber.org/zap"
 	"time"
 )

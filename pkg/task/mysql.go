@@ -1,10 +1,10 @@
 package task
 
 import (
-	"github.com/jixindatech/pkg/config"
-	"github.com/jixindatech/pkg/core/alert"
-	"github.com/jixindatech/pkg/queue"
-	"github.com/jixindatech/pkg/webserver/models"
+	"github.com/jixindatech/sqlaudit/pkg/config"
+	"github.com/jixindatech/sqlaudit/pkg/core/alert"
+	"github.com/jixindatech/sqlaudit/pkg/queue"
+	"github.com/jixindatech/sqlaudit/pkg/webserver/models"
 	"time"
 )
 

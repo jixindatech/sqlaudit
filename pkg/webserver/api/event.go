@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/jixindatech/pkg/webserver/models"
+	"github.com/jixindatech/sqlaudit/pkg/webserver/models"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )

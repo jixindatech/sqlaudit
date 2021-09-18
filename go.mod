@@ -1,4 +1,4 @@
-module sqlaudit
+module github.com/jixindatech/sqlaudit
 
 go 1.15
 

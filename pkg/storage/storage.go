@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"github.com/jixindatech/pkg/config"
+	"github.com/jixindatech/sqlaudit/pkg/config"
 )
 
 type Storage interface {

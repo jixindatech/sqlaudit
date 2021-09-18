@@ -1,8 +1,8 @@
 package task
 
 import (
-	"github.com/jixindatech/pkg/core/alert"
-	"github.com/jixindatech/pkg/queue"
+	"github.com/jixindatech/sqlaudit/pkg/core/alert"
+	"github.com/jixindatech/sqlaudit/pkg/queue"
 )
 
 type Task interface {

@@ -1,8 +1,8 @@
 package monitor
 
 import (
-	"github.com/jixindatech/audit/server"
-	"github.com/jixindatech/pkg/core/golog"
+	"github.com/jixindatech/sqlaudit/audit/server"
+	"github.com/jixindatech/sqlaudit/pkg/core/golog"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"

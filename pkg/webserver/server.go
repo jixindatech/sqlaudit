@@ -3,9 +3,9 @@ package webserver
 import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/go-playground/validator/v10"
-	"github.com/jixindatech/pkg/config"
-	"github.com/jixindatech/pkg/core/golog"
-	"github.com/jixindatech/pkg/webserver/api"
+	"github.com/jixindatech/sqlaudit/pkg/config"
+	"github.com/jixindatech/sqlaudit/pkg/core/golog"
+	"github.com/jixindatech/sqlaudit/pkg/webserver/api"
 	"github.com/labstack/echo/v4"
 	mw "github.com/labstack/echo/v4/middleware"
 	"github.com/tylerb/graceful"

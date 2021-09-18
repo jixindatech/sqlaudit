@@ -3,7 +3,7 @@ package models
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/jixindatech/pkg/storage"
+	"github.com/jixindatech/sqlaudit/pkg/storage"
 	"time"
 )
 

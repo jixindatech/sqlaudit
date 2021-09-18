@@ -1,7 +1,7 @@
 package queue
 
 import (
-	"github.com/jixindatech/pkg/config"
+	"github.com/jixindatech/sqlaudit/pkg/config"
 )
 
 type QueueChan struct {
