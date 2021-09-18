@@ -1,0 +1,53 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  },
+  "mappings": {
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "text",
+          "fielddata": true
+        },
+        "type": {
+          "type": "integer"
+        },
+        "src": {
+          "type": "text",
+          "fielddata": true
+        },
+        "dst": {
+          "type": "text"
+        },
+        "user": {
+          "type": "text",
+          "fielddata": true
+        },
+        "time": {
+          "type": "long"
+        },
+        "db": {
+          "type": "text",
+          "fielddata": true
+        },
+        "sql": {
+          "type": "text"
+        },
+        "error":{
+          "type": "integer"
+        },
+        "op": {
+          "type": "integer"
+        },
+        "rows": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "integer"
+        }
+      }
+  }
+}

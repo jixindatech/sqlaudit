@@ -1,0 +1,35 @@
+# server listen addr for sqlpacket
+addr : 0.0.0.0:9696
+
+# the web api server
+web_addr : 0.0.0.0:9797
+#web administrator
+web_user : admin
+web_password : 123456
+
+#log_path : ./logs
+
+# log level[debug|info|warn|error],default error
+log_level : debug
+
+sqlite3_db: audit.db
+
+queue_type: chan
+queue_num: 512
+
+es_config:
+    host: http://192.168.91.100:9200
+    user: test
+    password: test
+    index: test
+    type: test
+
+alert_type: email
+alert_email:
+    host: smtp.qq.com
+    port: 465
+    user: chengfangang@qq.com
+    password: blsqeuklshgpbdgj
+    from: chengfangang@qq.com
+    to: chengfangang@qq.com
+    interval: 10
