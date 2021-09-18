@@ -26,7 +26,7 @@ docker run -d \
 3. 说明:主要要有三个服务，分别是解析包、web api、及prometheus 服务， docker安装时需要注意开发其端口
 
 ## Basic structure
-![Image text](http://gitlab.jixindatech.com/sql/sqlaudit/-/raw/master/doc/images/sqlaudit.jpg?inline=true)
+![Image text](https://raw.githubusercontent.com/jixindatech/sqlaudit/master/doc/images/sqlaudit.jpg)
 ## Contributing
 
 PRs accepted.
