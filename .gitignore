@@ -1,0 +1,12 @@
+bin
+.DS_Store
+y.output
+.idea
+*.iml
+pkg/core/hack/version.go
+.vscode/
+*.txt
+*.db
+vendor/
+dashboard/dist
+logs/
