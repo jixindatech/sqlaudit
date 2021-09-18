@@ -28,8 +28,8 @@ alert_type: email
 alert_email:
     host: smtp.qq.com
     port: 465
-    user: chengfangang@qq.com
-    password: blsqeuklshgpbdgj
-    from: chengfangang@qq.com
-    to: chengfangang@qq.com
+    user: xxxxxxx@qq.com
+    password: xxxxx
+    from: xxxx@qq.com
+    to: xxxxxx@qq.com
     interval: 10
