@@ -23,36 +23,25 @@ type EmailAlert struct {
 
 var alertThreold map[string]int64
 var lock sync.Mutex
-var checkTime int64
 
-const checkIntervalTime = 10 * 60
-
-func (ep *EmailAlert) filterInterval(now int64) {
+func (ep *EmailAlert) filterInterval(now int64, name string) bool {
 	lock.Lock()
 	defer lock.Unlock()
 
 	for k, v := range alertThreold {
-		if v-now > ep.Interval {
+		if now-v > ep.Interval {
 			delete(alertThreold, k)
 		}
 	}
-}
 
-func (ep *EmailAlert) checkInterval(name string, now int64) bool {
-	lock.Lock()
-	defer lock.Unlock()
-
-	if res, ok := alertThreold[name]; ok {
-		if now-res > ep.Interval {
-			return false
-		}
-		alertThreold[name] = now
+	if _, ok := alertThreold[name]; ok {
 		return true
 	}
 
 	alertThreold[name] = now
-	return true
+	return false
 }
+
 func (ep *EmailAlert) Init() error {
 	if len(ep.To) == 0 {
 		return errors.New("email to not found")
@@ -69,18 +58,12 @@ func (ep *EmailAlert) Init() error {
 	}
 
 	alertThreold = make(map[string]int64, 10)
-	checkTime = time.Now().Unix()
 	return nil
 }
 
 func (ep *EmailAlert) Send(subject, body, name string) error {
 	now := time.Now().Unix()
-	if now-checkTime > checkIntervalTime {
-		ep.filterInterval(now)
-		checkTime = now
-	}
-
-	if !ep.checkInterval(name, now) {
+	if ep.filterInterval(now, name) {
 		return nil
 	}
 
