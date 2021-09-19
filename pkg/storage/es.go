@@ -30,8 +30,8 @@ func (e *EsStorage) InitStorage(cfg *config.EsConfig) error {
 	e.client, err = elasticsearch.NewClient(
 		elasticsearch.Config{
 			Addresses: []string{e.config.Host},
-			// Username:  e.config.User,
-			// Password:  e.config.Password,
+			Username:  e.config.User,
+			Password:  e.config.Password,
 		},
 	)
 	if err != nil {

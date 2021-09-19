@@ -85,7 +85,7 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+        path: 'https://github.com/jixindatech/sqlaudit',
         meta: { title: 'External Link', icon: 'link' }
       }
     ]
