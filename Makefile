@@ -5,7 +5,7 @@ all: build
 
 build: sqlaudit
 web:
-	cd dashboard && yarn install && npm run build:prod
+	cd dashboard && yarn config set ignore-engines true && yarn install && npm run build:prod
 sqlaudit:web
 	cd $(PWD)
 	go build -ldflags "-X \"main.BuildVersion=${COMMIT_HASH}\" -X \"main.BuildDate=$(BUILD_DATE)\"" -o ./bin/sqlaudit ./cmd/sqlaudit
