@@ -236,7 +236,7 @@ func (s *Server) onConn(c net.Conn) {
 
 	for {
 		if _, err := io.ReadFull(buf, header); err != nil {
-			golog.Error("server", zap.String("io", err.Error()))
+			golog.Error("server", zap.String("io", err.Error()), zap.String("ip", c.RemoteAddr().String()))
 			break
 		}
 
