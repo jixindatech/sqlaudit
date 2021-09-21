@@ -11,6 +11,7 @@ docker run -d \
      -p 9797:9797 \
      -p 9898:9898 \
      -v /docker/sqlaudit/etc:/opt/sqlaudit/etc \
+     -v /docker/sqlaudit/db:/opt/sqlaudit/db \
      sqlaudit
 ```
 
