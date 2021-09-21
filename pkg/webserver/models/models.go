@@ -18,11 +18,14 @@ type Database struct {
 	DB string
 }
 
+const path = "db"
+
 var db *gorm.DB
 var Storage storage.Storage
 
 func OpenDatabase(database string, _storage storage.Storage) error {
 	var err error
+	database = path + "/" + database
 	db, err = gorm.Open("sqlite3", database)
 	if err != nil {
 		return err

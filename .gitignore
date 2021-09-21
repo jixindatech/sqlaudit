@@ -6,7 +6,7 @@ y.output
 pkg/core/hack/version.go
 .vscode/
 *.txt
-*.db
 vendor/
 dashboard/dist
 logs/
+db/*.db
