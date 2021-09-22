@@ -75,7 +75,7 @@ func (e *EsStorage) Query(_query map[string]interface{}, page, pageSize int) (ma
 
 	sql := _query["sql"].(string)
 	if len(sql) > 0 {
-		queries = append(queries, esquery.Term("sql", sql))
+		queries = append(queries, esquery.Match("sql", sql))
 	}
 
 	db := _query["db"].(string)
