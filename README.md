@@ -40,6 +40,9 @@ docker run -d \
 ## Contributing
 PRs accepted.
 
+## Discussion Group
+QQ群: 254210748
+
 ## License
 
 Unlicense
