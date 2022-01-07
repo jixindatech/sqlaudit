@@ -12,7 +12,13 @@ web_password : 123456
 # log level[debug|info|warn|error],default error
 log_level : debug
 
-sqlite3_db: audit.db
+database:
+    type : mysql
+    user : root
+    password : 123456
+    host : 127.0.0.1:3306
+    name : sqlaudit
+    table-prefix :
 
 queue_type: chan
 queue_num: 512
@@ -21,7 +27,7 @@ es_config:
     host: http://192.168.91.100:9200
     user: test
     password: test
-    index: test
+    index: sqlaudit
     type: test
 
 alert_type: email
