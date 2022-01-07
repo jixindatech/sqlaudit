@@ -48,6 +48,7 @@ type Server struct {
 	listener          net.Listener
 	handle            *pcap.Handle
 	capture           bool
+	captureSqlType    int
 	running           bool
 	Queue             queue.Queue
 	Storage           storage.Storage
@@ -73,7 +74,7 @@ func (s *Server) Status() string {
 	return status
 }
 
-func NewServer(cfg *config.Config, capture bool, device string, queueInstance queue.Queue) (*Server, error) {
+func NewServer(cfg *config.Config, capture bool, sqltype int, device string, queueInstance queue.Queue) (*Server, error) {
 	s := new(Server)
 
 	s.cfg = cfg
@@ -100,6 +101,7 @@ func NewServer(cfg *config.Config, capture bool, device string, queueInstance qu
 
 	if capture {
 		s.capture = capture
+		s.captureSqlType = sqltype
 		const snapshot_len = 65536
 		promiscuous := true
 		s.handle, err = pcap.OpenLive(device, snapshot_len, promiscuous, pcap.BlockForever)
@@ -147,7 +149,7 @@ func (s *Server) Run() {
 	}
 }
 
-func (s *Server) processPacket(packet gopacket.Packet, deFrag *ip4defrag.IPv4Defragmenter, assembler *reassembly.Assembler) {
+func (s *Server) processPacket(sqlType int, packet gopacket.Packet, deFrag *ip4defrag.IPv4Defragmenter, assembler *reassembly.Assembler) {
 	// Process packet here
 	if true {
 		ip4Layer := packet.Layer(layers.LayerTypeIPv4)
@@ -182,6 +184,7 @@ func (s *Server) processPacket(packet gopacket.Packet, deFrag *ip4defrag.IPv4Def
 			}
 		}
 		c := tcpreassembly.Context{
+			SqlType:     sqlType,
 			CaptureInfo: packet.Metadata().CaptureInfo,
 		}
 		assembler.AssembleWithContext(packet.NetworkLayer().NetworkFlow(), tcp, &c)
@@ -201,7 +204,7 @@ func (s *Server) onCapture() {
 
 	packetSource := gopacket.NewPacketSource(s.handle, s.handle.LinkType())
 	for packet := range packetSource.Packets() {
-		s.processPacket(packet, deFrag, assembler)
+		s.processPacket(s.captureSqlType, packet, deFrag, assembler)
 
 		now := time.Now()
 		if now.After(nextFlush) {
@@ -211,7 +214,21 @@ func (s *Server) onCapture() {
 	}
 }
 
+func getSqlType(data []byte) (int, error) {
+	for i := 0; i < len(data)/4; i++ {
+		tmp := data[i*4 : i*4+4]
+		key := int(uint32(tmp[0]) | uint32(tmp[1])<<8)
+		value := int(uint32(tmp[2]) | uint32(tmp[3])<<8)
+		if key == config.SQL_CLASS && value == config.SQL_TYPE_MYSQL {
+			return value, nil
+		}
+	}
+
+	return 0, fmt.Errorf("%s", "sqltype not found")
+}
+
 func (s *Server) onConn(c net.Conn) {
+	defer c.Close()
 	defer func() {
 		err := recover()
 		if err != nil {
@@ -234,6 +251,28 @@ func (s *Server) onConn(c net.Conn) {
 	buf := bufio.NewReaderSize(c, 8*1024)
 	header := []byte{0, 0, 0, 0}
 
+	if _, err := io.ReadFull(buf, header); err != nil {
+		golog.Error("server", zap.String("io", err.Error()), zap.String("ip", c.RemoteAddr().String()))
+		return
+	}
+
+	length := int(uint32(header[3]) | uint32(header[2])<<8 | uint32(header[1])<<16 | uint32(header[0])<<24)
+	data := make([]byte, length)
+	if _, err := io.ReadFull(buf, data); err != nil {
+		golog.Error("server", zap.String("io", err.Error()), zap.String("ip", c.RemoteAddr().String()))
+		return
+	}
+
+	sqltype, err := getSqlType(data)
+	if err != nil {
+		golog.Error("server", zap.String("err", err.Error()), zap.String("ip", c.RemoteAddr().String()))
+		return
+	}
+
+	if true {
+		fmt.Println("type:", sqltype)
+		return
+	}
 	for {
 		if _, err := io.ReadFull(buf, header); err != nil {
 			golog.Error("server", zap.String("io", err.Error()), zap.String("ip", c.RemoteAddr().String()))
@@ -256,7 +295,7 @@ func (s *Server) onConn(c net.Conn) {
 		s.clients[c.RemoteAddr().String()]++
 		s.monitorMutex.Unlock()
 
-		s.processPacket(packet, deFrag, assembler)
+		s.processPacket(sqltype, packet, deFrag, assembler)
 		now := time.Now()
 		if now.After(nextFlush) {
 			flushed, closed := assembler.FlushWithOptions(reassembly.FlushOptions{T: now.Add(-timeout), TC: now.Add(-closeTimeout)})
@@ -269,7 +308,6 @@ func (s *Server) onConn(c net.Conn) {
 	delete(s.clients, c.RemoteAddr().String())
 	s.monitorMutex.Unlock()
 
-	_ = c.Close()
 }
 
 func (s *Server) GetMonitorData() (count int, res map[string]float64) {

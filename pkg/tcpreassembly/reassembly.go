@@ -7,6 +7,7 @@ import (
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/reassembly"
 	"github.com/jixindatech/sqlaudit/pkg/apps/mysql"
+	"github.com/jixindatech/sqlaudit/pkg/config"
 	"github.com/jixindatech/sqlaudit/pkg/core/golog"
 	"github.com/jixindatech/sqlaudit/pkg/queue"
 	"github.com/jixindatech/sqlaudit/pkg/storage"
@@ -36,6 +37,7 @@ var stats struct {
  * The assembler context
  */
 type Context struct {
+	SqlType     int
 	CaptureInfo gopacket.CaptureInfo
 	Storage     *storage.Storage
 }
@@ -56,17 +58,17 @@ func (factory *TcpStreamFactory) New(net, transport gopacket.Flow, tcp *layers.T
 	fsmOptions := reassembly.TCPSimpleFSMOptions{
 		SupportMissingEstablishment: false,
 	}
+	context := ac.(*Context)
 	stream := &TcpStream{
 		net:        net,
 		transport:  transport,
-		isMysql:    tcp.SrcPort == 3306 || tcp.DstPort == 3306,
-		reversed:   tcp.SrcPort == 80,
+		sqlType:    context.SqlType,
 		tcpstate:   reassembly.NewTCPSimpleFSM(fsmOptions),
 		ident:      fmt.Sprintf("%s:%s", net, transport),
 		optchecker: reassembly.NewTCPOptionCheck(),
 	}
 
-	if stream.isMysql {
+	if stream.sqlType == config.SQL_TYPE_MYSQL {
 		info := new(mysql.MysqlInfo)
 		info.Src = net.Src().String()
 		info.Dst = net.Dst().String()
@@ -89,7 +91,7 @@ type TcpStream struct {
 	fsmerr         bool
 	optchecker     reassembly.TCPOptionCheck
 	net, transport gopacket.Flow
-	isMysql        bool
+	sqlType        int
 	reversed       bool
 	session        interface{}
 	urls           []string
@@ -181,7 +183,7 @@ func (t *TcpStream) ReassembledSG(sg reassembly.ScatterGather, ac reassembly.Ass
 		return
 	}
 	data := sg.Fetch(length)
-	if t.isMysql {
+	if t.sqlType == config.SQL_TYPE_MYSQL {
 		if length > 0 {
 			if false {
 				fmt.Printf("Feeding mysql with:\n%s", hex.Dump(data))

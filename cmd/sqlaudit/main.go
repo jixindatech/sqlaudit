@@ -22,6 +22,7 @@ import (
 
 var configFile *string = flag.String("config", "./etc/config.yaml", "kingshard config file")
 var capture *bool = flag.Bool("c", false, "the capture way")
+var sqltype *int = flag.Int("t", 0x01, "sql type")
 var inf *string = flag.String("i", "eth0", "capture interface, default eth0")
 var version *bool = flag.Bool("v", false, "the version ")
 
@@ -85,7 +86,7 @@ func main() {
 		golog.Fatal("main", zap.String("err", err.Error()))
 	}
 
-	svr, err := server.NewServer(cfg, *capture, *inf, queueInstance)
+	svr, err := server.NewServer(cfg, *capture, *sqltype, *inf, queueInstance)
 	if err != nil {
 		golog.Fatal("main", zap.String("err", err.Error()))
 	}
