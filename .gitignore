@@ -10,3 +10,4 @@ vendor/
 dashboard/dist
 logs/
 db/*.db
+!./vendor/golang.org/x/tools/cmd/goyacc
