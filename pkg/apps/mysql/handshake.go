@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
+	"fmt"
 )
 
 func processServerHello(info *MysqlInfo, data []byte) error {
@@ -45,6 +46,7 @@ func processClientHello(info *MysqlInfo, data []byte) error {
 	pos++
 	// auth := data[pos : pos+authLen]
 	pos += authLen
+	fmt.Println("Authlen:", authLen)
 
 	if info.Capability&CLIENT_PLUGIN_AUTH_LENENC_CLIENT_DATA == 1 {
 		//TODO:

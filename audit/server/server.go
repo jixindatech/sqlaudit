@@ -275,8 +275,6 @@ func (s *Server) onConn(c net.Conn) {
 			break
 		}
 
-		fmt.Println(header[0], header[1], header[2], header[3])
-
 		length := int(uint32(header[0]) | uint32(header[1])<<8 | uint32(header[2])<<16 | uint32(header[3])<<24)
 		data := make([]byte, length)
 		if _, err := io.ReadFull(buf, data); err != nil {

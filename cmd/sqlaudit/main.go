@@ -14,6 +14,7 @@ import (
 	"github.com/jixindatech/sqlaudit/pkg/webserver"
 	"github.com/jixindatech/sqlaudit/pkg/webserver/models"
 	"go.uber.org/zap"
+	// _ "golang.org/x/tools/cmd/goyacc"
 	"os"
 	"os/signal"
 	"runtime"
