@@ -6,8 +6,8 @@ y.output
 pkg/core/hack/version.go
 .vscode/
 *.txt
-vendor/
+vendor/*
+!./vendor/golang.org/x/tools/cmd/goyacc
 dashboard/dist
 logs/
 db/*.db
-!./vendor/golang.org/x/tools/cmd/goyacc
