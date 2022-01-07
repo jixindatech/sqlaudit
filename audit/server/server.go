@@ -217,8 +217,8 @@ func (s *Server) onCapture() {
 func getSqlType(data []byte) (int, error) {
 	for i := 0; i < len(data)/4; i++ {
 		tmp := data[i*4 : i*4+4]
-		key := int(uint32(tmp[0]) | uint32(tmp[1])<<8)
-		value := int(uint32(tmp[2]) | uint32(tmp[3])<<8)
+		key := int(uint32(tmp[1]) | uint32(tmp[0])<<8)
+		value := int(uint32(tmp[3]) | uint32(tmp[2])<<8)
 		if key == config.SQL_CLASS && value == config.SQL_TYPE_MYSQL {
 			return value, nil
 		}
@@ -269,15 +269,13 @@ func (s *Server) onConn(c net.Conn) {
 		return
 	}
 
-	if true {
-		fmt.Println("type:", sqltype)
-		return
-	}
 	for {
 		if _, err := io.ReadFull(buf, header); err != nil {
 			golog.Error("server", zap.String("io", err.Error()), zap.String("ip", c.RemoteAddr().String()))
 			break
 		}
+
+		fmt.Println(header[0], header[1], header[2], header[3])
 
 		length := int(uint32(header[0]) | uint32(header[1])<<8 | uint32(header[2])<<16 | uint32(header[3])<<24)
 		data := make([]byte, length)

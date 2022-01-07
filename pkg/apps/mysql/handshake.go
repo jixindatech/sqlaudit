@@ -12,6 +12,7 @@ func processServerHello(info *MysqlInfo, data []byte) error {
 		return errors.New("invalid server version")
 	}
 
+	info.Protocol = data[0]
 	info.Version = string(data[1:versionEnd])
 
 	return nil

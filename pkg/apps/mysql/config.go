@@ -81,6 +81,7 @@ type MysqlInfo struct {
 	Status   int
 
 	Src, Dst   string
+	Protocol   byte
 	Version    string
 	Capability uint32
 	User       string
