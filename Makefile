@@ -10,6 +10,7 @@ sqlaudit: web
 	cd $(PWD)
 	go install golang.org/x/tools/cmd/goyacc@latest
 	goyacc -o ./sqlparser/sql.go ./sqlparser/sql.y
+	gofmt -w ./sqlparser/sql.go
 	go build -ldflags "-X \"main.BuildVersion=${COMMIT_HASH}\" -X \"main.BuildDate=$(BUILD_DATE)\"" -o ./bin/sqlaudit ./cmd/sqlaudit
 clean:
 	@rm -rf bin
