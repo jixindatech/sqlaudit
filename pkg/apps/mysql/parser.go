@@ -1,8 +1,7 @@
 package mysql
 
 import (
-	// "github.com/xwb1989/sqlparser"
-	"github.com/jixindatech/sqlaudit/sqlparser"
+	"vitess.io/vitess/go/vt/sqlparser"
 )
 
 func getSqlOp(data string) (int, string, error) {
@@ -16,8 +15,10 @@ func getSqlOp(data string) (int, string, error) {
 		return OP_UNION, "", nil
 	case *sqlparser.Select:
 		return OP_SELECT, "", nil
-	//case *sqlparser.Stream:
-	//	return OP_SELECT, "", nil
+	case *sqlparser.Stream:
+		return OP_SELECT, "", nil
+	case *sqlparser.VStream:
+		return OP_SELECT, "", nil
 	case *sqlparser.Insert:
 		return OP_INSERT, "", nil
 	case *sqlparser.Update:
@@ -26,25 +27,78 @@ func getSqlOp(data string) (int, string, error) {
 		return OP_DELETE, "", nil
 	case *sqlparser.Set:
 		return OP_SET, "", nil
-	//case *sqlparser.DBDDL:
-	//	return OP_DDL, "", nil
-	case *sqlparser.DDL:
-		return OP_DDL, "", nil
+	case *sqlparser.SetTransaction:
+		return OP_SET, "", nil
+	case *sqlparser.DropDatabase:
+		return OP_SET, "", nil
+	case *sqlparser.Flush:
+		return OP_SET, "", nil
 	case *sqlparser.Show:
-		return OP_SHOW, "", nil
-	//case *sqlparser.Use:
-	//	use := stmt.(*sqlparser.Use)
-	//	return OP_USE, use.DBName.String(), nil
+		return OP_SET, "", nil
+	case *sqlparser.Use:
+		return OP_SET, "", nil
 	case *sqlparser.Begin:
-		return OP_BEGIN, "", nil
+		return OP_SET, "", nil
 	case *sqlparser.Commit:
-		return OP_COMMIT, "", nil
+		return OP_SET, "", nil
 	case *sqlparser.Rollback:
-		return OP_ROLLBACK, "", nil
-		//case *sqlparser.OtherRead:
-		//	return OP_OTHERREAD, "", nil
-		//case *sqlparser.OtherAdmin:
-		//	return OP_OTHERADMIN, "", nil
+		return OP_SET, "", nil
+	case *sqlparser.SRollback:
+		return OP_SET, "", nil
+	case *sqlparser.Savepoint:
+		return OP_SET, "", nil
+	case *sqlparser.Release:
+		return OP_SET, "", nil
+	case *sqlparser.OtherRead:
+		return OP_SET, "", nil
+	case *sqlparser.OtherAdmin:
+		return OP_SET, "", nil
+	/*
+		case *sqlparser.Select:
+			return OP_SET, "", nil
+		case *sqlparser.Union:
+			return OP_SET, "", nil
+	*/
+	case *sqlparser.Load:
+		return OP_SET, "", nil
+	case *sqlparser.CreateDatabase:
+		return OP_SET, "", nil
+	case *sqlparser.AlterDatabase:
+		return OP_SET, "", nil
+	case *sqlparser.CreateTable:
+		return OP_SET, "", nil
+	case *sqlparser.CreateView:
+		return OP_SET, "", nil
+	case *sqlparser.AlterView:
+		return OP_SET, "", nil
+	case *sqlparser.LockTables:
+		return OP_SET, "", nil
+	case *sqlparser.UnlockTables:
+		return OP_SET, "", nil
+	case *sqlparser.AlterTable:
+		return OP_SET, "", nil
+	case *sqlparser.AlterVschema:
+		return OP_SET, "", nil
+	case *sqlparser.AlterMigration:
+		return OP_SET, "", nil
+	case *sqlparser.RevertMigration:
+		return OP_SET, "", nil
+	case *sqlparser.ShowMigrationLogs:
+		return OP_SET, "", nil
+	case *sqlparser.DropTable:
+		return OP_SET, "", nil
+	case *sqlparser.DropView:
+		return OP_SET, "", nil
+	case *sqlparser.TruncateTable:
+		return OP_SET, "", nil
+	case *sqlparser.RenameTable:
+		return OP_SET, "", nil
+	case *sqlparser.CallProc:
+		return OP_SET, "", nil
+	case *sqlparser.ExplainStmt:
+		return OP_SET, "", nil
+	case *sqlparser.ExplainTab:
+		return OP_SET, "", nil
 	}
 
 	return OP_UNKNOWN, "", nil
