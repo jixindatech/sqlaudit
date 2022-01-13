@@ -702,3 +702,178 @@ func GetMd5(fingerPrint string) string {
 	data := []byte(fingerPrint)
 	return fmt.Sprintf("%x", md5.Sum(data))
 }
+
+var mysqlKeyWordMap = map[string]int{
+	"?":                  0,
+	"add":                2,
+	"array":              3,
+	"as":                 4,
+	"asc":                5,
+	"between":            6,
+	"binary":             7,
+	"by":                 8,
+	"case":               9,
+	"call":               10,
+	"change":             11,
+	"character":          12,
+	"check":              13,
+	"collate":            14,
+	"column":             15,
+	"convert":            16,
+	"create":             17,
+	"cross":              18,
+	"cume_dist":          19,
+	"current_date":       20,
+	"current_time":       21,
+	"current_timestamp":  22,
+	"current_user":       23,
+	"substr":             24,
+	"substring":          25,
+	"database":           26,
+	"databases":          27,
+	"default":            28,
+	"delete":             29,
+	"dense_rank":         30,
+	"desc":               31,
+	"describe":           32,
+	"distinct":           33,
+	"distinctrow":        34,
+	"div":                35,
+	"drop":               36,
+	"else":               37,
+	"escape":             38,
+	"exists":             39,
+	"explain":            40,
+	"false":              41,
+	"first_value":        42,
+	"for":                43,
+	"force":              44,
+	"foreign":            45,
+	"from":               46,
+	"fulltext":           47,
+	"generated":          48,
+	"group":              49,
+	"grouping":           50,
+	"groups":             51,
+	"having":             52,
+	"if":                 53,
+	"ignore":             54,
+	"in":                 55,
+	"index":              56,
+	"inner":              57,
+	"insert":             58,
+	"interval":           59,
+	"into":               60,
+	"is":                 61,
+	"join":               62,
+	"json_table":         63,
+	"key":                64,
+	"lag":                65,
+	"last_value":         66,
+	"lead":               67,
+	"left":               68,
+	"like":               69,
+	"limit":              70,
+	"localtime":          71,
+	"localtimestamp":     72,
+	"lock":               73,
+	"low_priority":       74,
+	"member":             75,
+	"match":              76,
+	"maxvalue":           77,
+	"mod":                78,
+	"natural":            79,
+	"next":               80,
+	"no_write_to_binlog": 81,
+	"not":                82,
+	"nth_value":          83,
+	"ntile":              84,
+	"null":               85,
+	"of":                 86,
+	"off":                87,
+	"on":                 88,
+	"optimizer_costs":    89,
+	"or":                 90,
+	"order":              91,
+	"outer":              92,
+	"outfile":            93,
+	"over":               94,
+	"partition":          95,
+	"percent_rank":       96,
+	"primary":            97,
+	"rank":               98,
+	"read":               99,
+	"recursive":          100,
+	"regexp":             101,
+	"rename":             102,
+	"replace":            103,
+	"right":              104,
+	"row_number":         105,
+	"schema":             106,
+	"schemas":            107,
+	"select":             108,
+	"separator":          109,
+	"set":                110,
+	"show":               111,
+	"spatial":            112,
+	"stored":             113,
+	"straight_join":      114,
+	"system":             115,
+	"table":              116,
+	"then":               117,
+	"timestampadd":       118,
+	"timestampdiff":      119,
+	"to":                 120,
+	"true":               121,
+	"union":              122,
+	"unique":             123,
+	"unlock":             124,
+	"update":             125,
+	"use":                126,
+	"using":              127,
+	"utc_date":           128,
+	"utc_time":           129,
+	"utc_timestamp":      130,
+	"values":             131,
+	"virtual":            132,
+	"with":               133,
+	"when":               134,
+	"where":              135,
+	"window":             136,
+	"write":              137,
+	"xor":                138,
+	"(":                  139,
+	")":                  140,
+}
+
+func BuildCharacterFromSQL(sql string) []int {
+	var res []int
+	arrs := strings.Split(sql, " ")
+	for i := 0; i < len(arrs); i++ {
+		if arrs[i][0] == '(' {
+			res = append(res, mysqlKeyWordMap["("])
+			word := arrs[i][1:len(arrs[i])]
+			if value, ok := mysqlKeyWordMap[word]; ok {
+				res = append(res, value)
+			} else {
+				res = append(res, 0)
+			}
+		} else if arrs[i][len(arrs[i])-1] == ')' {
+			word := arrs[i][0 : len(arrs[i])-1]
+			if value, ok := mysqlKeyWordMap[word]; ok {
+				res = append(res, value)
+			} else {
+				res = append(res, 0)
+			}
+			res = append(res, mysqlKeyWordMap["("])
+		} else {
+			word := arrs[i]
+			if value, ok := mysqlKeyWordMap[word]; ok {
+				res = append(res, value)
+			} else {
+				res = append(res, 0)
+			}
+		}
+	}
+	return res
+}
