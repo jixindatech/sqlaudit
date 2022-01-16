@@ -45,6 +45,7 @@ func OpenDatabase(cfg *config.DataBase, _storage storage.Storage) error {
 	db.DB().SetMaxOpenConns(100)
 
 	db.AutoMigrate(Rule{})
+	db.AutoMigrate(FingerPrint{})
 
 	Storage = _storage
 	return nil

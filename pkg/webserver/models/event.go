@@ -181,3 +181,28 @@ func GetEventInfo(query map[string]interface{}) (map[string]interface{}, error) 
 func SaveEvent(body interface{}) error {
 	return Storage.Save(body)
 }
+
+func GetFingerPrintInfo(_query map[string]interface{}, page, pagesize int) (interface{}, error) {
+	query := map[string]interface{}{
+		"size": 0,
+		"aggs": map[string]interface{}{
+			"group_by_fingerprint": map[string]interface{}{
+				"terms": map[string]interface{}{
+					"field": "fingerprint",
+				},
+			},
+		},
+		"range": map[string]interface{}{
+			"timestamp": map[string]interface{}{
+				"gte": _query["start"],
+				"lte": _query["end"],
+			},
+		},
+	}
+	res, err := Storage.QueryFingerPrintInfo(query, page, pagesize)
+	if err != nil {
+		return nil, err
+	}
+	fingerprintCount := res["aggregations"].(map[string]interface{})["group_by_fingerprint"].(map[string]interface{})["buckets"]
+	return fingerprintCount, nil
+}

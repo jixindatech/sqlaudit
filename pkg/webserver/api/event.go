@@ -75,3 +75,30 @@ func GetEventInfo(c echo.Context) (err error) {
 	}
 	return c.JSON(http.StatusOK, data)
 }
+
+type queryEventFingerPrintInfoForm struct {
+	Page  int   `json:"page" form:"page" query:"page" validate:"required,gte=1"`
+	Size  int   `json:"size" form:"size" query:"size" validate:"required,min=1,max=50"`
+	Start int64 `json:"start" query:"start" validate:"omitempty"`
+	End   int64 `json:"end" query:"end" validate:"omitempty"`
+}
+
+func GetEventFingerPrintInfo(c echo.Context) (err error) {
+	form := new(queryEventFingerPrintInfoForm)
+	if err = c.Bind(form); err != nil {
+		return c.JSON(http.StatusBadRequest, nil)
+	}
+	if err = c.Validate(form); err != nil {
+		return c.JSON(http.StatusBadRequest, nil)
+	}
+
+	query := make(map[string]interface{})
+	query["start"] = form.Start / 1000
+	query["end"] = form.End / 1000
+
+	data, err := models.GetFingerPrintInfo(query, form.Page, form.Size)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, nil)
+	}
+	return c.JSON(http.StatusOK, data)
+}

@@ -8,6 +8,7 @@ type Storage interface {
 	InitStorage(cfg *config.EsConfig) error
 	Query(query map[string]interface{}, page, size int) (map[string]interface{}, error)
 	QueryInfo(map[string]interface{}) ([]byte, error)
+	QueryFingerPrintInfo(map[string]interface{}, int, int) (map[string]interface{}, error)
 	Save(body interface{}) error
 }
 

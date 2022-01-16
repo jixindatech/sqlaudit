@@ -24,7 +24,7 @@ var configFile *string = flag.String("config", "./etc/config.yaml", "kingshard c
 var capture *bool = flag.Bool("c", false, "the capture way")
 var sqltype *int = flag.Int("t", 0x01, "sql type")
 var inf *string = flag.String("i", "eth0", "capture interface, default eth0")
-var version *bool = flag.Bool("v", false, "the version ")
+var version *bool = flag.Bool("version", false, "the version ")
 
 var (
 	BuildDate    string

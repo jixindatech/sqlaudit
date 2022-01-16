@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/aquasecurity/esquery"
 	"github.com/elastic/go-elasticsearch/v7"
 	"github.com/jixindatech/sqlaudit/pkg/config"
@@ -235,4 +236,36 @@ func (e *EsStorage) QueryInfo(_query map[string]interface{}) ([]byte, error) {
 	_, err = b.ReadFrom(response.Body)
 
 	return b.Bytes(), err
+}
+
+func (e *EsStorage) QueryFingerPrintInfo(_query map[string]interface{}, page, pageSize int) (map[string]interface{}, error) {
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(_query); err != nil {
+		return nil, fmt.Errorf("Error encoding query: %s", err)
+	}
+
+	response, err := e.client.Search(
+		e.client.Search.WithContext(context.Background()),
+		e.client.Search.WithIndex(e.config.Index),
+		e.client.Search.WithBody(&buf),
+		e.client.Search.WithFrom((page-1)*pageSize),
+		e.client.Search.WithSize(pageSize),
+		e.client.Search.WithTrackTotalHits(true),
+		e.client.Search.WithPretty(),
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+
+	if response.IsError() {
+		return nil, errors.New("elasticsearch body has error")
+	}
+
+	var r map[string]interface{}
+	if err := json.NewDecoder(response.Body).Decode(&r); err != nil {
+		return nil, fmt.Errorf("Error parsing the response body: %s", err)
+	}
+
+	return r, nil
 }
