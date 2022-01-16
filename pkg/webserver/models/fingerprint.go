@@ -5,7 +5,7 @@ import "github.com/jinzhu/gorm"
 type FingerPrint struct {
 	Model
 
-	FingerPrint string `json:"fingerprint" gorm:"column:finger_print;default:''"`
+	FingerPrint string `json:"fingerprint" gorm:"column:fingerprint;unique;default:''"`
 	Remark      string `json:"remark" gorm:"column:remark;"`
 }
 

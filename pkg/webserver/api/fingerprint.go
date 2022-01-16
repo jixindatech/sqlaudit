@@ -1,7 +1,6 @@
 package api
 
 import (
-	"github.com/jixindatech/sqlaudit/pkg/apps/mysql"
 	"github.com/jixindatech/sqlaudit/pkg/webserver/models"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -71,7 +70,7 @@ func UpdateFingerPrint(c echo.Context) (err error) {
 		return c.JSON(http.StatusBadRequest, nil)
 	}
 
-	form := new(ruleForm)
+	form := new(fingerPrintForm)
 	if err = c.Bind(form); err != nil {
 		return c.JSON(http.StatusBadRequest, nil)
 	}
@@ -80,17 +79,7 @@ func UpdateFingerPrint(c echo.Context) (err error) {
 	}
 
 	data := make(map[string]interface{})
-	data["name"] = form.Name
-	data["time"] = form.Time
-	data["type"] = form.Type
-	data["user"] = form.User
-	data["ip"] = form.IP
-	data["db"] = form.Db
-	data["op"] = form.Op
-	data["sql"] = form.Sql
-	data["match"] = form.Match
-	data["priority"] = form.Priority
-	data["alert"] = form.Alert
+	data["fingerprint"] = form.FingerPrint
 	data["remark"] = form.Remark
 
 	err = models.UpdateFingerPrint(uint(id), data)
@@ -140,9 +129,6 @@ func GetFingerPrints(c echo.Context) (err error) {
 	}
 
 	query := make(map[string]interface{})
-	query["name"] = form.Name
-	query["sort"] = form.Sort
-
 	fingerprints, err := models.GetFingerPrints(query, form.Page, form.Size)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, nil)
@@ -160,10 +146,5 @@ func GetFingerPrints(c echo.Context) (err error) {
 }
 
 func updateFingerPrintConfig() error {
-	err := mysql.ParserSqlRules()
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
