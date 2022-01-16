@@ -48,6 +48,9 @@
         },
         "status": {
           "type": "integer"
+        },
+        "fingerprint": {
+          "type": "keyword"
         }
       }
   }

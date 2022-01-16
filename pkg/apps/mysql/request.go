@@ -43,6 +43,8 @@ func processRequest(info *MysqlInfo, data []byte) error {
 		info.Op, res, err = getSqlOp(sqlData)
 		if err != nil {
 			golog.Error("op", zap.String("err", err.Error()))
+		} else {
+			msg.FingerPrint = GetFingerprint(sqlData)
 		}
 
 		msg.Op = info.Op
