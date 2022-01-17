@@ -73,11 +73,11 @@ func (s *ApiServer) RegisterWebRoute() {
 	g.GET("/event", api.GetEvents)
 	g.GET("/event/info", api.GetEventInfo)
 
-	g.POST("/rule", api.AddFingerPrint)
-	g.DELETE("/rule/:id", api.DeleteFingerPrint)
-	g.PUT("/rule/:id", api.UpdateFingerPrint)
-	g.GET("/rule/:id", api.GetFingerPrint)
-	g.GET("/rule", api.GetFingerPrints)
+	g.POST("/fingerprint", api.AddFingerPrint)
+	g.DELETE("/fingerprint/:id", api.DeleteFingerPrint)
+	g.PUT("/fingerprint/:id", api.UpdateFingerPrint)
+	g.GET("/fingerprint/:id", api.GetFingerPrint)
+	g.GET("/fingerprint", api.GetFingerPrints)
 
 }
 

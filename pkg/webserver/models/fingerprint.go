@@ -5,12 +5,14 @@ import "github.com/jinzhu/gorm"
 type FingerPrint struct {
 	Model
 
+	Name        string `json:"name" gorm:"column:name;not null"`
 	FingerPrint string `json:"fingerprint" gorm:"column:fingerprint;unique;default:''"`
 	Remark      string `json:"remark" gorm:"column:remark;"`
 }
 
 func AddFingerPrint(data map[string]interface{}) error {
 	fingerprint := FingerPrint{
+		Name:        data["name"].(string),
 		FingerPrint: data["fingerprint"].(string),
 		Remark:      data["remark"].(string),
 	}
@@ -48,12 +50,16 @@ func GetFingerPrint(id uint) (*FingerPrint, error) {
 func GetFingerPrints(query map[string]interface{}, page int, pageSize int) ([]*FingerPrint, error) {
 	var fingerprints []*FingerPrint
 	var err error
-
+	search := make(map[string]interface{})
+	name := query["name"].(string)
+	if len(name) > 0 {
+		search["name"] = "%" + name + "%"
+	}
 	if page == 0 || pageSize == 0 {
-		err = db.Find(&fingerprints).Error
+		err = db.Where(search).Find(&fingerprints).Error
 	} else {
 		pageNum := (page - 1) * pageSize
-		err = db.Offset(pageNum).Limit(pageSize).Order("created_at DESC").Find(&fingerprints).Error
+		err = db.Where(search).Offset(pageNum).Limit(pageSize).Order("created_at DESC").Find(&fingerprints).Error
 	}
 
 	if err != nil && err != gorm.ErrRecordNotFound {

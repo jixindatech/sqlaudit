@@ -7,17 +7,18 @@ import (
 )
 
 type queryEventForm struct {
-	Page  int    `json:"page" form:"page" query:"page" validate:"required,gte=1"`
-	Size  int    `json:"size" form:"size" query:"size" validate:"required,min=1,max=50"`
-	Name  string `json:"name" form:"name" query:"name" validate:"omitempty,max=254"`
-	Type  int    `json:"type" form:"type" query:"type" validate:"omitempty,min=1,max=3"`
-	Sql   string `json:"sql"  form:"sql" query:"sql"  validate:"omitempty,max=254"`
-	Db    string `json:"db"   form:"db" query:"db"  validate:"omitempty,max=254"`
-	IP    string `json:"ip"   form:"ip" query:"ip" validate:"omitempty,ip"`
-	User  string `json:"user" form:"user" query:"user" validate:"omitempty,max=254"`
-	Op    int    `json:"op"   form:"op" query:"op" validate:"omitempty,gte=1,lte=15"`
-	Start int64  `json:"start" form:"start" query:"start" validate:"omitempty"`
-	End   int64  `json:"end" form:"end" query:"end" validate:"omitempty"`
+	Page        int    `json:"page" form:"page" query:"page" validate:"required,gte=1"`
+	Size        int    `json:"size" form:"size" query:"size" validate:"required,min=1,max=50"`
+	Name        string `json:"name" form:"name" query:"name" validate:"omitempty,max=254"`
+	FingerPrint string `json:"fingerprint" form:"fingerprint" query:"fingerprint" validate:"omitempty,max=254"`
+	Type        int    `json:"type" form:"type" query:"type" validate:"omitempty,min=1,max=3"`
+	Sql         string `json:"sql"  form:"sql" query:"sql"  validate:"omitempty,max=254"`
+	Db          string `json:"db"   form:"db" query:"db"  validate:"omitempty,max=254"`
+	IP          string `json:"ip"   form:"ip" query:"ip" validate:"omitempty,ip"`
+	User        string `json:"user" form:"user" query:"user" validate:"omitempty,max=254"`
+	Op          int    `json:"op"   form:"op" query:"op" validate:"omitempty,gte=1,lte=15"`
+	Start       int64  `json:"start" form:"start" query:"start" validate:"omitempty"`
+	End         int64  `json:"end" form:"end" query:"end" validate:"omitempty"`
 }
 
 func GetEvents(c echo.Context) (err error) {
@@ -33,6 +34,7 @@ func GetEvents(c echo.Context) (err error) {
 	query["name"] = form.Name
 	query["type"] = form.Type
 	query["sql"] = form.Sql
+	query["fingerprint"] = form.FingerPrint
 	query["db"] = form.Db
 	query["ip"] = form.IP
 	query["user"] = form.User
@@ -70,33 +72,6 @@ func GetEventInfo(c echo.Context) (err error) {
 	query["interval"] = 10
 
 	data, err := models.GetEventInfo(query)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, nil)
-	}
-	return c.JSON(http.StatusOK, data)
-}
-
-type queryEventFingerPrintInfoForm struct {
-	Page  int   `json:"page" form:"page" query:"page" validate:"required,gte=1"`
-	Size  int   `json:"size" form:"size" query:"size" validate:"required,min=1,max=50"`
-	Start int64 `json:"start" query:"start" validate:"omitempty"`
-	End   int64 `json:"end" query:"end" validate:"omitempty"`
-}
-
-func GetEventFingerPrintInfo(c echo.Context) (err error) {
-	form := new(queryEventFingerPrintInfoForm)
-	if err = c.Bind(form); err != nil {
-		return c.JSON(http.StatusBadRequest, nil)
-	}
-	if err = c.Validate(form); err != nil {
-		return c.JSON(http.StatusBadRequest, nil)
-	}
-
-	query := make(map[string]interface{})
-	query["start"] = form.Start / 1000
-	query["end"] = form.End / 1000
-
-	data, err := models.GetFingerPrintInfo(query, form.Page, form.Size)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, nil)
 	}

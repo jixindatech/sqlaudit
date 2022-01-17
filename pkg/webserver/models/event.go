@@ -148,6 +148,25 @@ func GetEventInfo(query map[string]interface{}) (map[string]interface{}, error) 
 		resUser["num"] = docCount
 	}
 
+	resFingerprints := make(map[string]interface{})
+	fingerprints := gjson.GetBytes(data, "aggregations.group_by_fingerprint.buckets")
+	if fingerprints.Exists() {
+		var list []string
+		var docCount []int64
+		var items []bucketStringItem
+		err := json.Unmarshal([]byte(fingerprints.Raw), &items)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, item := range items {
+			list = append(list, item.Key)
+			docCount = append(docCount, item.DocCount)
+		}
+		resFingerprints["item"] = list
+		resFingerprints["num"] = docCount
+	}
+
 	resTypeInterval := make(map[int]interface{})
 	typeInterval := gjson.GetBytes(data, "aggregations.group_type_interval.buckets")
 	if typeInterval.Exists() {
@@ -173,6 +192,7 @@ func GetEventInfo(query map[string]interface{}) (map[string]interface{}, error) 
 	res["opinfo"] = resOpInterval
 	res["ip"] = resIP
 	res["user"] = resUser
+	res["fingerprint"] = resFingerprints
 	res["typeinfo"] = resTypeInterval
 
 	return res, nil
@@ -180,29 +200,4 @@ func GetEventInfo(query map[string]interface{}) (map[string]interface{}, error) 
 
 func SaveEvent(body interface{}) error {
 	return Storage.Save(body)
-}
-
-func GetFingerPrintInfo(_query map[string]interface{}, page, pagesize int) (interface{}, error) {
-	query := map[string]interface{}{
-		"size": 0,
-		"aggs": map[string]interface{}{
-			"group_by_fingerprint": map[string]interface{}{
-				"terms": map[string]interface{}{
-					"field": "fingerprint",
-				},
-			},
-		},
-		"range": map[string]interface{}{
-			"timestamp": map[string]interface{}{
-				"gte": _query["start"],
-				"lte": _query["end"],
-			},
-		},
-	}
-	res, err := Storage.QueryFingerPrintInfo(query, page, pagesize)
-	if err != nil {
-		return nil, err
-	}
-	fingerprintCount := res["aggregations"].(map[string]interface{})["group_by_fingerprint"].(map[string]interface{})["buckets"]
-	return fingerprintCount, nil
 }

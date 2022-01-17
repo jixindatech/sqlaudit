@@ -8,6 +8,7 @@ import (
 )
 
 type fingerPrintForm struct {
+	Name        string `json:"name"   form:"name" validate:"required,max=254"`
 	FingerPrint string `json:"fingerprint"   form:"fingerprint" validate:"required,max=254"`
 	Remark      string `json:"remark" validate:"max=254"`
 }
@@ -22,6 +23,7 @@ func AddFingerPrint(c echo.Context) (err error) {
 	}
 
 	data := make(map[string]interface{})
+	data["name"] = form.Name
 	data["fingerprint"] = form.FingerPrint
 	data["remark"] = form.Remark
 
@@ -79,6 +81,7 @@ func UpdateFingerPrint(c echo.Context) (err error) {
 	}
 
 	data := make(map[string]interface{})
+	data["name"] = form.Name
 	data["fingerprint"] = form.FingerPrint
 	data["remark"] = form.Remark
 
@@ -115,7 +118,6 @@ func GetFingerPrint(c echo.Context) error {
 type queryFingerPrintForm struct {
 	Page int    `json:"page" query:"page" validate:"required,gte=1"`
 	Size int    `json:"size" query:"size" validate:"required,min=1,max=50"`
-	Sort int    `json:"sort" query:"sort" validate:"required,gte=1,lte=4"`
 	Name string `json:"name" query:"name" validate:"omitempty,max=254"`
 }
 
@@ -129,6 +131,7 @@ func GetFingerPrints(c echo.Context) (err error) {
 	}
 
 	query := make(map[string]interface{})
+	query["name"] = form.Name
 	fingerprints, err := models.GetFingerPrints(query, form.Page, form.Size)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, nil)

@@ -11,6 +11,7 @@ import (
 	"github.com/jixindatech/sqlaudit/pkg/config"
 	"github.com/jixindatech/sqlaudit/pkg/core/golog"
 	"go.uber.org/zap"
+	"math"
 )
 
 const maxItemGroup = 10
@@ -74,6 +75,11 @@ func (e *EsStorage) Query(_query map[string]interface{}, page, pageSize int) (ma
 		queries = append(queries, esquery.Term("type", ruleType))
 	}
 
+	fingerprint := _query["fingerprint"].(string)
+	if len(fingerprint) > 0 {
+		queries = append(queries, esquery.Term("fingerprint", fingerprint))
+	}
+
 	sql := _query["sql"].(string)
 	if len(sql) > 0 {
 		queries = append(queries, esquery.Match("sql", sql))
@@ -107,7 +113,6 @@ func (e *EsStorage) Query(_query map[string]interface{}, page, pageSize int) (ma
 		return nil, errors.New("query time has error")
 	}
 
-	//queries = append(queries, esquery.Term("sql", "select"))
 	query := esquery.Search().Sort("time", "desc").Query(
 		esquery.Bool().Must(queries...),
 	)
@@ -162,6 +167,7 @@ func (e *EsStorage) QueryInfo(_query map[string]interface{}) ([]byte, error) {
 			esquery.TermsAgg("group_by_op", "op"),
 			esquery.TermsAgg("group_by_src", "src"),
 			esquery.TermsAgg("group_by_user", "user"),
+			esquery.TermsAgg("group_by_fingerprint", "fingerprint").Size(math.MaxInt32),
 			esquery.TermsAgg("group_op_interval", "op").Aggs(
 				esquery.CustomAgg("interval_data", map[string]interface{}{
 					"histogram": map[string]interface{}{
@@ -191,6 +197,7 @@ func (e *EsStorage) QueryInfo(_query map[string]interface{}) ([]byte, error) {
 			esquery.TermsAgg("group_by_type", "type"),
 			esquery.TermsAgg("group_by_src", "src"),
 			esquery.TermsAgg("group_by_user", "user"),
+			esquery.TermsAgg("group_by_fingerprint", "fingerprint").Size(math.MaxInt32),
 			esquery.TermsAgg("group_by_op", "op"),
 			esquery.TermsAgg("group_op_interval", "op").Aggs(
 				esquery.CustomAgg("interval_data", map[string]interface{}{
