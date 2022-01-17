@@ -2,6 +2,7 @@
   <div class="dashboard-container">
     <panel-group
       :event-total="eventTotal"
+      :fingerprint-total="fingerprintsTotal"
       :allowed-total="allowedTotal"
       :denied-total="deniedTotal"
       :unknown-total="unknownTotal"
@@ -37,6 +38,11 @@
     <!--<el-row style="background:#fff;top-bittom:120px; padding:16px 16px 0;margin-bottom:32px;">-->
     <el-row style="margin-top:30px">
       <el-card>
+        <FingerPrintLineChart :data="fingerprintinfo" />
+      </el-card>
+    </el-row>
+    <el-row style="margin-top:30px">
+      <el-card>
         <OPLineChart :data="opinfo" />
       </el-card>
     </el-row>
@@ -57,6 +63,7 @@ import IPBarChart from './components/IPBarChart.vue'
 import UserBarChart from './components/UserBarChart.vue'
 import OPLineChart from './components/OPLineChart.vue'
 import TypeLineChart from './components/TypeLineChart.vue'
+import FingerPrintLineChart from './components/FingerPrintLineChart'
 
 // import host from '@/api/host'
 import api from '@/api/statics'
@@ -64,13 +71,14 @@ import { sqlStrOpMap } from '@/utils/const'
 
 export default {
   name: 'Dashboard',
-  components: { PanelGroup, /* PieChart, BarChart, LineChart,*/ IPBarChart, UserBarChart, OPLineChart, TypeLineChart },
+  components: { PanelGroup, /* PieChart, BarChart, LineChart,*/ FingerPrintLineChart, IPBarChart, UserBarChart, OPLineChart, TypeLineChart },
   data() {
     return {
-      eventTotal: 1000,
-      allowedTotal: 1000,
-      deniedTotal: 1000,
-      unknownTotal: 1000,
+      eventTotal: 0,
+      fingerprintsTotal: 0,
+      allowedTotal: 0,
+      deniedTotal: 0,
+      unknownTotal: 0,
 
       flag: false, // 判断是否显示图表组件
       categoryTotal: {}, // 每个分类下的文章数
@@ -79,7 +87,8 @@ export default {
       ip: {},
       user: {},
       opinfo: {},
-      typeinfo: {}
+      typeinfo: {},
+      fingerprintinfo: {}
     }
   },
   created() {
@@ -142,6 +151,9 @@ export default {
         this.typeinfo = response.data.typeinfo
         this.typeinfo.start = query.start
         this.typeinfo.end = query.end
+
+        this.fingerprintinfo = response.data.fingerprint
+        this.fingerprintsTotal = this.fingerprintinfo.item.length
       })
     },
 

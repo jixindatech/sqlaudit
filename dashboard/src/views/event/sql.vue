@@ -8,6 +8,9 @@
       <el-form-item label="SQL关键字:">
         <el-input v-model.trim="query.sql" />
       </el-form-item>
+      <el-form-item label="SQL指纹:">
+        <el-input v-model="query.fingerprint" />
+      </el-form-item>
       <el-form-item label="命中规则名称:">
         <el-input v-model.trim="query.name" />
       </el-form-item>
@@ -61,11 +64,11 @@
       border
       style="width: 100%"
     >
-      <el-table-column align="center" type="index" label="序号" width="60" />
       <el-table-column align="center" prop="_source.user" label="数据库用户" />
       <el-table-column align="center" prop="_source.src" label="用户IP" />
       <el-table-column align="center" prop="_source.db" label="数据库" />
       <el-table-column align="center" prop="_source.sql" label="SQL命令" />
+      <el-table-column align="center" prop="_source.fingerprint" label="指纹" />
       <el-table-column align="center" prop="_source.op" label="请求类型">
         <template slot-scope="scope">
           {{ sqlStrOpMap[scope.row._source.op] }}
@@ -81,7 +84,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="_source.time" label="时间">
+      <el-table-column fixed align="center" prop="_source.time" label="时间">
         <template slot-scope="scope">
           {{ new Date(scope.row._source.time * 1000).toLocaleString() }}
         </template>
