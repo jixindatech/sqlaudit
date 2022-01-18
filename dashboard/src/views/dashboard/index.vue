@@ -43,6 +43,20 @@
     </el-row>
     <el-row style="margin-top:30px">
       <el-card>
+        <el-table
+          :data="fingerprintList"
+          stripe
+          border
+          style="width: 100%"
+        >
+          <el-table-column align="center" type="index" label="序号" width="60" />
+          <el-table-column align="center" prop="key" label="指纹" />
+          <el-table-column align="center" prop="num" label="数量" width="80" />
+        </el-table>
+      </el-card>
+    </el-row>
+    <el-row style="margin-top:30px">
+      <el-card>
         <OPLineChart :data="opinfo" />
       </el-card>
     </el-row>
@@ -88,7 +102,8 @@ export default {
       user: {},
       opinfo: {},
       typeinfo: {},
-      fingerprintinfo: {}
+      fingerprintinfo: {},
+      fingerprintList: []
     }
   },
   created() {
@@ -154,7 +169,20 @@ export default {
 
         this.fingerprintinfo = response.data.fingerprint
         this.fingerprintsTotal = this.fingerprintinfo.item.length
+        this.transferToList(this.fingerprintinfo.item, this.fingerprintinfo.num)
       })
+    },
+
+    transferToList(keys, nums) {
+      this.fingerprintList = []
+      for (var i = 0; i < keys.length; i++) {
+        const tmp = {
+          'key': keys[i],
+          'num': nums[i]
+        }
+        console.log(tmp)
+        this.fingerprintList.push(tmp)
+      }
     },
 
     async queryData(name, start, end) {
