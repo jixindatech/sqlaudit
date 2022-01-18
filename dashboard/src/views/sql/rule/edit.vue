@@ -32,7 +32,18 @@
       <el-form-item label="数据库" prop="db">
         <el-input v-model="formData.db" />
       </el-form-item>
-      <el-form-item label="操作类型" prop="op">
+      <el-form-item label="匹配类型" prop="ruletype">
+        <el-select v-model.number="formData.ruletype">
+          <el-option
+            v-for="item in sqlRuleTypeOptions"
+            :key="item.key"
+            :label="item.value"
+            :value="item.key"
+            size="mini"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="formData.ruletype==1" label="操作类型" prop="op">
         <el-select v-model.number="formData.op">
           <el-option
             v-for="item in sqlOptions"
@@ -43,7 +54,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item prop="match">
+      <el-form-item v-if="formData.ruletype==1" prop="match">
         <template slot="label">
           <span style="position:relative">
             <span>匹配方式</span>
@@ -63,9 +74,22 @@
             :value="item.key"
           />
         </el-select>
-        <el-input v-model="formData.sql" clearable style="margin-top: 10px;" />
       </el-form-item>
-      <el-form-item label="优先级：" prop="priority">
+      <el-form-item prop="sql">
+        <template slot="label">
+          <span style="position:relative">
+            <span>匹配内容：</span>
+            <el-tooltip style="position:absolute;right:-8px;" class="item" effect="dark" placement="top">
+              <div slot="content">
+                <p>如果指定了指纹匹配或匹配方式，需要在输入框内输入匹配的内容</p>
+              </div>
+              <i class="el-icon-question table-msg" />
+            </el-tooltip>
+          </span>
+        </template>
+        <el-input v-model="formData.sql" />
+      </el-form-item>
+      <el-form-item v-if="formData.ruletype==1" label="优先级：" prop="priority">
         <el-input-number v-model.number="formData.priority" :min="1" />
       </el-form-item>
       <el-form-item label="是否告警：" prop="alert">
@@ -86,7 +110,7 @@
 </template>
 <script>
 import api from '@/api/rule'
-import { sqlOptions, sqlMatchOptions } from '@/utils/const'
+import { sqlOptions, sqlMatchOptions, sqlRuleTypeOptions } from '@/utils/const'
 import { validIP } from '@/utils/validate'
 
 export default {
@@ -135,7 +159,9 @@ export default {
 
       return callback()
     }
+
     return {
+      sqlRuleTypeOptions,
       sqlMatchOptions,
       sqlOptions,
       rules: {
@@ -147,6 +173,9 @@ export default {
         ],
         ip: [
           { trigger: 'change', validator: validateIP }
+        ],
+        ruletype: [
+          { required: true, message: '请选择匹配类型', trigger: 'change' }
         ],
         op: [
           { required: true, message: '请选择操作指令', trigger: 'change' }

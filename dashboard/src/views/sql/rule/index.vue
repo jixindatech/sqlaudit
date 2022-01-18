@@ -36,6 +36,9 @@
           <el-tag :type="scope.row.type | typeFilter">
             {{ scope.row.type===1 ? '允许类型': '拒绝类型' }}
           </el-tag>
+          <el-tag :type="scope.row.type | rulTypeFilter">
+            {{ scope.row.ruletype===1 ? '字符串匹配': '指纹匹配' }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="user" label="数据库用户" />
@@ -43,10 +46,14 @@
       <el-table-column align="center" prop="db" label="数据库" />
       <el-table-column align="center" prop="op" label="命令内容">
         <template slot-scope="scope">
-          {{ scope.row.match ===0 ? sqlOpMap[scope.row.op] : sqlOpMap[scope.row.op] + ' ' + sqlMatchMap[scope.row.match] + ' ' + scope.row.sql }}
+          {{ scope.row.match === 0 ? (scope.row.op === 0 ? scope.row.sql: sqlOpMap[scope.row.op]) : sqlOpMap[scope.row.op] + ' ' + sqlMatchMap[scope.row.match] + ' ' + scope.row.sql }}
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="priority" label="优先级" />
+      <el-table-column align="center" prop="priority" label="优先级">
+        <template v-if="scope.row.ruletype === 1" slot-scope="scope">
+          {{ scope.row.priority }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" prop="remark" label="备注" />
       <el-table-column align="center" label="操作" width="330">
         <template slot-scope="scope">
@@ -86,8 +93,11 @@ export default {
   components: { Edit },
   filters: {
     typeFilter(status) {
-      // 0 是禁用， 1是正常
       const statusMap = { 1: 'success', 2: 'danger' }
+      return statusMap[status]
+    },
+    rulTypeFilter(status) {
+      const statusMap = { 1: 'primary', 2: 'info' }
       return statusMap[status]
     }
   },

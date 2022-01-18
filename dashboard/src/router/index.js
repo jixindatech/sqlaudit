@@ -64,12 +64,6 @@ export const constantRoutes = [
         name: 'Rule',
         component: () => import('@/views/sql/rule/index'),
         meta: { title: 'SQL配置', icon: 'form' }
-      },
-      {
-        path: 'fingerprint',
-        name: 'Fingerprint',
-        component: () => import('@/views/sql/fingerprint/index'),
-        meta: { title: '指纹配置', icon: 'form' }
       }
     ]
   },

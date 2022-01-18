@@ -1,3 +1,8 @@
+export const sqlRuleTypeOptions = [
+  { key: 1, value: '字符串匹配' },
+  { key: 2, value: '指纹匹配' }
+]
+
 export const sqlOptions = [
   { key: 1, value: 'UNKNOWN' },
   { key: 2, value: 'SELECT' },
