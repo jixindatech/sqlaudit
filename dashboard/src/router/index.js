@@ -56,13 +56,20 @@ export const constantRoutes = [
     path: '/sql',
     component: Layout,
     name: 'Sql',
-    redirect: '/database',
+    meta: { title: 'SQL配置', icon: 'form' },
+    redirect: '/rule',
     children: [
       {
         path: 'rule',
         name: 'Rule',
         component: () => import('@/views/sql/rule/index'),
         meta: { title: 'SQL配置', icon: 'form' }
+      },
+      {
+        path: 'fingerprint',
+        name: 'Fingerprint',
+        component: () => import('@/views/sql/fingerprint/index'),
+        meta: { title: '指纹配置', icon: 'form' }
       }
     ]
   },
@@ -70,13 +77,14 @@ export const constantRoutes = [
     path: '/event',
     component: Layout,
     name: 'Event',
-    redirect: '/index',
+    redirect: '/eventsql',
+    meta: { title: '日志查询', icon: 'form' },
     children: [
       {
-        path: 'index',
-        name: 'Index',
-        component: () => import('@/views/event/index'),
-        meta: { title: '日志查询', icon: 'form' }
+        path: 'eventsql',
+        name: 'Eventsql',
+        component: () => import('@/views/event/sql'),
+        meta: { title: 'SQL查询', icon: 'form' }
       }
     ]
   },

@@ -30,7 +30,7 @@
     </el-form>
 
     <el-row :gutter="40" class="panel-group">
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+      <el-col :xs="12" :sm="12" :lg="5" class="card-panel-col">
         <div class="card-panel">
           <div class="card-panel-icon-wrapper icon-people">
             <svg-icon icon-class="tree-table" class-name="card-panel-icon" />
@@ -43,41 +43,54 @@
           </div>
         </div>
       </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+      <el-col :xs="12" :sm="12" :lg="5" class="card-panel-col">
         <div class="card-panel">
           <div class="card-panel-icon-wrapper icon-people">
             <svg-icon icon-class="tree-table" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              拒绝类型数量
+              指纹类型
+            </div>
+            <count-to :start-val="0" :end-val="fingerprintTotal" :duration="2600" class="card-panel-num" />
+          </div>
+        </div>
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel">
+          <div class="card-panel-icon-wrapper icon-people">
+            <svg-icon icon-class="tree-table" class-name="card-panel-icon" />
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              拒绝类型
             </div>
             <count-to :start-val="0" :end-val="deniedTotal" :duration="2600" class="card-panel-num" />
           </div>
         </div>
       </el-col>
 
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
         <div class="card-panel">
           <div class="card-panel-icon-wrapper icon-message">
             <svg-icon icon-class="documentation" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              允许类型数量
+              允许类型
             </div>
             <count-to :start-val="0" :end-val="allowedTotal" :duration="3000" class="card-panel-num" />
           </div>
         </div>
       </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
         <div class="card-panel">
           <div class="card-panel-icon-wrapper icon-money">
             <svg-icon icon-class="question" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              未知类型数量
+              未知类型
             </div>
             <count-to :start-val="0" :end-val="unknownTotal" :duration="3200" class="card-panel-num" />
           </div>
@@ -98,29 +111,37 @@ export default {
   props: {
     eventTotal: {
       type: Number,
-      default: 1000
+      default: 0
+    },
+    fingerprintTotal: {
+      type: Number,
+      default: 0
     },
     allowedTotal: {
       type: Number,
-      default: 1000
+      default: 0
     },
     deniedTotal: {
       type: Number,
-      default: 1000
+      default: 0
     },
     unknownTotal: {
       type: Number,
-      default: 1000
+      default: 0
     },
 
     options: {
       type: Array,
       default: () => []
     },
-    // eslint-disable-next-line vue/require-default-prop
-    queryData: Function,
-    // eslint-disable-next-line vue/require-default-prop
-    reload: Function
+    queryData: {
+      type: Function,
+      default: () => {}
+    },
+    reload: {
+      type: Function,
+      default: () => {}
+    }
   },
   data() {
     return {
@@ -267,7 +288,9 @@ export default {
     .card-panel-description {
       float: right;
       font-weight: bold;
-      margin: 26px;
+      margin-top: 26px;
+      margin-bottom: 26px;
+      margin-right: 10px;
       margin-left: 0px;
 
       .card-panel-text {
