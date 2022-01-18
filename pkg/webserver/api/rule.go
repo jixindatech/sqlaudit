@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"github.com/jixindatech/sqlaudit/pkg/apps/mysql"
 	"github.com/jixindatech/sqlaudit/pkg/webserver/models"
 	"github.com/labstack/echo/v4"
@@ -15,10 +16,11 @@ type ruleForm struct {
 	User     string `json:"user" form:"user" validate:"omitempty,max=254"`
 	IP       string `json:"ip"   form:"ip" validate:"omitempty,ip"`
 	Db       string `json:"db"   form:"db" validate:"omitempty,max=254"`
+	RuleType int    `json:"ruletype" form:"ruletype" validate:"required,min=1,max=2"`
 	Op       int    `json:"op"   form:"op" validate:"omitempty,gte=0,lte=15"`
-	Sql      string `json:"sql"   form:"sql" validate:"omitempty,max=254"`
 	Match    int    `json:"match"   form:"match" validate:"omitempty,gte=1,lte=2"`
-	Priority int    `json:"priority" form:"priority" validate:"required,gte=1"`
+	Priority int    `json:"priority" form:"priority" validate:"omitempty,gte=0"`
+	Sql      string `json:"sql"   form:"sql" validate:"omitempty,max=254"`
 	Alert    int    `json:"alert"   form:"alert" validate:"omitempty,gte=0,lte=1"`
 	Remark   string `json:"remark" validate:"max=254"`
 }
@@ -26,10 +28,27 @@ type ruleForm struct {
 func AddRule(c echo.Context) (err error) {
 	form := new(ruleForm)
 	if err = c.Bind(form); err != nil {
-		return c.JSON(http.StatusBadRequest, nil)
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	if err = c.Validate(form); err != nil {
-		return c.JSON(http.StatusBadRequest, nil)
+		fmt.Println("err:", err)
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	if form.RuleType == 1 {
+		if form.Op == 0 {
+			return c.JSON(http.StatusBadRequest, "invalid ruletype parameters")
+		}
+		if form.Match > 0 && len(form.Sql) == 0 {
+			return c.JSON(http.StatusBadRequest, "invalid ruletype parameters")
+		}
+	} else {
+		if len(form.Sql) == 0 {
+			return c.JSON(http.StatusBadRequest, "invalid ruletype parameters")
+		}
+		form.Op = 0
+		form.Match = 0
+		form.Priority = 0
 	}
 
 	data := make(map[string]interface{})
@@ -39,6 +58,7 @@ func AddRule(c echo.Context) (err error) {
 	data["user"] = form.User
 	data["ip"] = form.IP
 	data["db"] = form.Db
+	data["ruletype"] = form.RuleType
 	data["op"] = form.Op
 	data["sql"] = form.Sql
 	data["match"] = form.Match

@@ -25,14 +25,15 @@ export const sqlOptions = [
 type Rule struct {
 	Model
 
-	Name  string `json:"name" gorm:"column:name;not null"`
-	Time  int    `json:"time" gorm:"column:time"`
-	Type  int    `json:"type" gorm:"column:type;default 0"`
-	User  string `json:"user" gorm:"column:user;default:''"`
-	IP    string `json:"ip"   gorm:"column:ip;default:''"`
-	Db    string `json:"db"   gorm:"column:db;default:''"`
-	Op    int    `json:"op" gorm:"column:op;default:0"`
-	Alert int    `json:"alert" gorm:"column:alert;default:0"`
+	Name     string `json:"name" gorm:"column:name;not null"`
+	Time     int    `json:"time" gorm:"column:time"`
+	Type     int    `json:"type" gorm:"column:type;default 0"`
+	User     string `json:"user" gorm:"column:user;default:''"`
+	IP       string `json:"ip"   gorm:"column:ip;default:''"`
+	Db       string `json:"db"   gorm:"column:db;default:''"`
+	RuleType int    `json:"ruletype" gorm:"column:ruletype;not null"`
+	Op       int    `json:"op" gorm:"column:op;default:0"`
+	Alert    int    `json:"alert" gorm:"column:alert;default:0"`
 
 	Sql      string `json:"sql" gorm:"column:sql;default:''"`
 	Match    int    `json:"match" gorm:"column:match;default:0"`
@@ -49,6 +50,7 @@ func AddRule(data map[string]interface{}) error {
 		User:     data["user"].(string),
 		IP:       data["ip"].(string),
 		Db:       data["db"].(string),
+		RuleType: data["ruletype"].(int),
 		Op:       data["op"].(int),
 		Sql:      data["sql"].(string),
 		Match:    data["match"].(int),
@@ -56,7 +58,6 @@ func AddRule(data map[string]interface{}) error {
 		Alert:    data["alert"].(int),
 		Remark:   data["remark"].(string),
 	}
-
 	err := db.Create(&rule).Error
 	if err != nil {
 		return err

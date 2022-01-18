@@ -72,13 +72,13 @@ func (s *ApiServer) RegisterWebRoute() {
 
 	g.GET("/event", api.GetEvents)
 	g.GET("/event/info", api.GetEventInfo)
-
-	g.POST("/fingerprint", api.AddFingerPrint)
-	g.DELETE("/fingerprint/:id", api.DeleteFingerPrint)
-	g.PUT("/fingerprint/:id", api.UpdateFingerPrint)
-	g.GET("/fingerprint/:id", api.GetFingerPrint)
-	g.GET("/fingerprint", api.GetFingerPrints)
-
+	/*
+		g.POST("/fingerprint", api.AddFingerPrint)
+		g.DELETE("/fingerprint/:id", api.DeleteFingerPrint)
+		g.PUT("/fingerprint/:id", api.UpdateFingerPrint)
+		g.GET("/fingerprint/:id", api.GetFingerPrint)
+		g.GET("/fingerprint", api.GetFingerPrints)
+	*/
 }
 
 type userLoginForm struct {
