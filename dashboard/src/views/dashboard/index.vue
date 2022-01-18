@@ -180,7 +180,6 @@ export default {
           'key': keys[i],
           'num': nums[i]
         }
-        console.log(tmp)
         this.fingerprintList.push(tmp)
       }
     },
