@@ -164,7 +164,7 @@ export default {
       api.getById(id).then((response) => {
         if (response.data) {
           this.edit.formData = response.data
-          if (response.data.match === 0) {
+          if (response.data.match === 0 && response.data.ruletype === 1) {
             this.edit.formData.match = undefined
             this.edit.formData.sql = undefined
           }
