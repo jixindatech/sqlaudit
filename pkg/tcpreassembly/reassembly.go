@@ -3,6 +3,7 @@ package tcpreassembly
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/go-basic/uuid"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/reassembly"
@@ -70,6 +71,7 @@ func (factory *TcpStreamFactory) New(net, transport gopacket.Flow, tcp *layers.T
 
 	if stream.sqlType == config.SQL_TYPE_MYSQL {
 		info := new(mysql.MysqlInfo)
+		info.Transaction = uuid.New()
 		info.Src = net.Src().String()
 		info.Dst = net.Dst().String()
 

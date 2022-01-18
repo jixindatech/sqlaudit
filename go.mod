@@ -7,6 +7,7 @@ require (
 	github.com/aquasecurity/esquery v0.2.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/elastic/go-elasticsearch/v7 v7.14.0
+	github.com/go-basic/uuid v1.0.0
 	github.com/go-gomail/gomail v0.0.0-20160411212932-81ebce5c23df
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/google/gopacket v1.1.19

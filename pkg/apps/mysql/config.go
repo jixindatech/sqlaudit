@@ -21,6 +21,7 @@ type SqlConfig struct {
 	Match        int
 	Alert        int
 	MatchContext interface{}
+	FingerPrint  string
 
 	Rows   int
 	Status int
@@ -53,18 +54,23 @@ func ParserSqlRules() error {
 
 			Alert: rule.Alert,
 		}
-		if len(rule.Sql) > 0 && rule.Match != MATCH_UNKNOWN {
-			switch rule.Match {
-			case MATCH_STRING:
-				item.MatchContext = rule.Sql
-			case MATCH_REGEXP:
-				item.MatchContext, err = regexp.Compile(rule.Sql)
-				if err != nil {
-					golog.Error("regexp", zap.String("err", err.Error()))
-					continue
+		if rule.RuleType == 1 {
+			if len(rule.Sql) > 0 && rule.Match != MATCH_UNKNOWN {
+				switch rule.Match {
+				case MATCH_STRING:
+					item.MatchContext = rule.Sql
+				case MATCH_REGEXP:
+					item.MatchContext, err = regexp.Compile(rule.Sql)
+					if err != nil {
+						golog.Error("regexp", zap.String("err", err.Error()))
+						continue
+					}
 				}
 			}
+		} else if rule.RuleType == 2 {
+			item.FingerPrint = rule.Sql
 		}
+
 		items = append(items, item)
 	}
 
@@ -80,14 +86,16 @@ type MysqlInfo struct {
 	PacketNo uint8
 	Status   int
 
-	Src, Dst   string
-	Protocol   byte
-	Version    string
-	Capability uint32
-	User       string
-	Db         string
-	Sql        string
-	Op         int
+	Transaction string
+	Src, Dst    string
+	Protocol    byte
+	Version     string
+	Capability  uint32
+	User        string
+	Db          string
+	FingerPrint string
+	Sql         string
+	Op          int
 
 	Queue queue.Queue
 }

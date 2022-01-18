@@ -27,33 +27,34 @@ func processRequest(info *MysqlInfo, data []byte) error {
 
 		now := time.Now().Unix()
 		msg := config.SqlMsg{
-			Src:   info.Src,
-			Dst:   info.Dst,
-			User:  info.User,
-			Time:  now,
-			Db:    info.Db,
-			Sql:   sqlData,
-			Error: PARSE_ERROR,
-			Type:  TYPE_UNKNOWN,
-			Op:    OP_UNKNOWN,
+			Transaction: info.Transaction,
+			Src:         info.Src,
+			Dst:         info.Dst,
+			User:        info.User,
+			Time:        now,
+			Db:          info.Db,
+			Sql:         sqlData,
+			Error:       PARSE_ERROR,
+			Type:        TYPE_UNKNOWN,
+			Op:          OP_UNKNOWN,
 		}
 
 		var err error
 		var res string
 		info.Op, res, err = getSqlOp(sqlData)
 		if err != nil {
+			msg.Error = PARSE_ERROR
 			golog.Error("op", zap.String("err", err.Error()))
 		} else {
+			msg.Error = PARSE_OK
 			msg.FingerPrint = GetFingerprint(sqlData)
+			info.FingerPrint = msg.FingerPrint
 		}
 
 		msg.Op = info.Op
 
-		if info.Op != OP_UNKNOWN {
-			msg.Error = PARSE_OK
-			if info.Op == OP_USE {
-				info.Db = res
-			}
+		if info.Op == OP_USE {
+			info.Db = res
 		}
 
 		ruleId, ruleType, ruleName, ruleAlert := matchRules(info, &ruleConfig)

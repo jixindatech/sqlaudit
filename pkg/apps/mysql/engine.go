@@ -40,21 +40,26 @@ func matchRules(info *MysqlInfo, ruleConfig *RulesConfig) (uint, int, string, in
 		if len(rule.Db) > 0 && rule.Db != info.Db {
 			continue
 		}
-		if rule.Op != info.Op {
-			continue
-		}
 
-		if rule.Match != MATCH_UNKNOWN {
-			bingo := sqlMatcher[rule.Match](info.Sql, rule.MatchContext)
-			if bingo {
-				found = true
-				break
+		if len(rule.FingerPrint) > 0 {
+			found = rule.FingerPrint == info.FingerPrint
+		} else {
+			if rule.Op != info.Op {
+				continue
 			}
-			continue
+			if rule.Match != MATCH_UNKNOWN {
+				bingo := sqlMatcher[rule.Match](info.Sql, rule.MatchContext)
+				if bingo {
+					found = true
+					break
+				}
+				continue
+			}
 		}
 
-		found = true
-		break
+		if found == true {
+			break
+		}
 	}
 
 	if found && rule != nil {
