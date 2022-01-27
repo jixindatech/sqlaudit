@@ -21,7 +21,7 @@ docker run -d \
 - 日志默认是输出到标准输出/错误的， 如果配置log_path所有日志记录到该目录下
 - es_config 是配置sql事件的存储。
 - alert_email 是配置邮件告警的信息，interval(单位秒)是指多长时间再次告警，防止邮件风暴。
-- Elasticsearch 中的 settings配置在 etc/mapping.json中，比较简单。
+- Elasticsearch 使用7.x版本，Elasticsearch 中的 settings配置在 etc/mapping.json中，比较简单。
 - Prometheus的端口(9898)是在程序中写的，监控内容是发送数据的客户端和sql请求的数量，统计间隔是prometheus的scrap_interval。
 
 ### 启动方式
