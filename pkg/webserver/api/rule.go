@@ -166,7 +166,7 @@ func GetRule(c echo.Context) error {
 type queryRuleForm struct {
 	Page int    `json:"page" query:"page" validate:"required,gte=1"`
 	Size int    `json:"size" query:"size" validate:"required,min=1,max=50"`
-	Sort int    `json:"sort" query:"sort" validate:"required,gte=1,lte=4"`
+	Sort int    `json:"sort" query:"sort" validate:"omitempty,gte=1,lte=4"`
 	Name string `json:"name" query:"name" validate:"omitempty,max=254"`
 }
 
