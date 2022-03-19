@@ -11,6 +11,7 @@ type SqlMsg struct {
 	User        string `json:"user"`
 	Time        int64  `json:"time"`
 	Db          string `json:"db"`
+	Cmd         byte   `json:"cmd"`
 	Sql         string `json:"sql"`
 	Op          int    `json:"op"`
 	Alert       int    `json:"alert"`

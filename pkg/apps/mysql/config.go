@@ -93,6 +93,7 @@ type MysqlInfo struct {
 	Capability  uint32
 	User        string
 	Db          string
+	Cmd         byte
 	FingerPrint string
 	Sql         string
 	Op          int
