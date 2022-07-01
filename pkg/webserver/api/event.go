@@ -73,7 +73,7 @@ func GetEventInfo(c echo.Context) (err error) {
 
 	data, err := models.GetEventInfo(query)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{"error": err.Error()}
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{"error": err.Error()})
 	}
 	return c.JSON(http.StatusOK, data)
 }
