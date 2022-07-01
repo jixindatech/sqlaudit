@@ -236,7 +236,7 @@ func (e *EsStorage) QueryInfo(_query map[string]interface{}) ([]byte, error) {
 	defer response.Body.Close()
 
 	if response.IsError() {
-		return nil, errors.New("elasticsearch body has error")
+		return nil, errors.New(response.Status())
 	}
 
 	var b bytes.Buffer
