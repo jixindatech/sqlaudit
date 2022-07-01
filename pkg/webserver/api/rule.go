@@ -17,7 +17,7 @@ type ruleForm struct {
 	IP       string `json:"ip"   form:"ip" validate:"omitempty,ip"`
 	Db       string `json:"db"   form:"db" validate:"omitempty,max=254"`
 	RuleType int    `json:"ruletype" form:"ruletype" validate:"required,min=1,max=2"`
-	Op       int    `json:"op"   form:"op" validate:"omitempty,gte=0,lte=15"`
+	Op       int    `json:"op"   form:"op" validate:"omitempty,gte=0,lte=48"`
 	Match    int    `json:"match"   form:"match" validate:"omitempty,gte=1,lte=2"`
 	Priority int    `json:"priority" form:"priority" validate:"omitempty,gte=0"`
 	Sql      string `json:"sql"   form:"sql" validate:"omitempty,max=254"`
