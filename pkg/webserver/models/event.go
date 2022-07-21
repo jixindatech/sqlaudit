@@ -125,6 +125,12 @@ func GetEventInfo(query map[string]interface{}) (map[string]interface{}, error) 
 			ipList = append(ipList, item.Key)
 			docCount = append(docCount, item.DocCount)
 		}
+
+		if len(ipList) == 0 {
+			ipList = []string{}
+			docCount = []int64{}
+		}
+
 		resIP["item"] = ipList
 		resIP["num"] = docCount
 	}
@@ -144,6 +150,12 @@ func GetEventInfo(query map[string]interface{}) (map[string]interface{}, error) 
 			userList = append(userList, item.Key)
 			docCount = append(docCount, item.DocCount)
 		}
+
+		if len(userList) == 0 {
+			userList = []string{}
+			docCount = []int64{}
+		}
+
 		resUser["item"] = userList
 		resUser["num"] = docCount
 	}
@@ -163,6 +175,12 @@ func GetEventInfo(query map[string]interface{}) (map[string]interface{}, error) 
 			list = append(list, item.Key)
 			docCount = append(docCount, item.DocCount)
 		}
+		
+		if len(list) == 0 {
+			list = []string{}
+			docCount = []int64{}
+		}
+
 		resFingerprints["item"] = list
 		resFingerprints["num"] = docCount
 	}
